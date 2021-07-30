@@ -12,6 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 import ru.geeekbrains.myfilmapp.R
 import ru.geeekbrains.myfilmapp.databinding.MainFragmentBinding
 import ru.geeekbrains.myfilmapp.model.AppState
+import ru.geeekbrains.myfilmapp.model.data.Film
 import ru.geeekbrains.myfilmapp.viewmodel.MainViewModel
 
 class MainFragment : Fragment() {
@@ -40,17 +41,15 @@ class MainFragment : Fragment() {
         val observer = Observer<AppState> { a -> renderData(a)}
 
         viewModel.getData().observe(viewLifecycleOwner, observer)
-        binding.button.setOnClickListener {
-            viewModel.requestData(binding.message.text as String)
-        }
+        viewModel.getFilmFromRemote()
     }
 
     private fun renderData(data: AppState){
         when(data){
             is AppState.Success -> {
-                val weatherData = data.weatherData
+                val filmData = data.filmData
                 binding.loadingLayout.visibility = View.GONE
-                binding.message.text = weatherData
+                binding.message.text = filmData.title
             }
 
             is AppState.Loading -> {
@@ -60,7 +59,7 @@ class MainFragment : Fragment() {
             is AppState.Error -> {
                 binding.loadingLayout.visibility = View.GONE
                 Snackbar.make(binding.main, "Error", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("Reload") { viewModel.requestData(binding.message.text as String) }
+                    .setAction("Reload") { viewModel.getFilmFromRemote() }
                     .show()
             }
         }
@@ -70,5 +69,7 @@ class MainFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+
 
 }
