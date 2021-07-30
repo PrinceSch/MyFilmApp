@@ -6,10 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
-import ru.geeekbrains.myfilmapp.R
 import ru.geeekbrains.myfilmapp.databinding.MainFragmentBinding
 import ru.geeekbrains.myfilmapp.model.AppState
 import ru.geeekbrains.myfilmapp.model.data.Film
@@ -49,7 +47,7 @@ class MainFragment : Fragment() {
             is AppState.Success -> {
                 val filmData = data.filmData
                 binding.loadingLayout.visibility = View.GONE
-                binding.message.text = filmData.title
+                populateData(filmData)
             }
 
             is AppState.Loading -> {
@@ -70,6 +68,11 @@ class MainFragment : Fragment() {
         _binding = null
     }
 
-
+    private fun populateData(filmData: Film){
+        with(binding){
+            title.text = filmData.title
+            filmId.text = filmData.id.toString()
+        }
+    }
 
 }
