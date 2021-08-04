@@ -8,27 +8,31 @@ import ru.geeekbrains.myfilmapp.model.repository.Repository
 import ru.geeekbrains.myfilmapp.model.repository.RepositoryImpl
 import java.lang.Thread.*
 
-class MainViewModel(private val repository : Repository = RepositoryImpl()): ViewModel() {
+class MainViewModel(private val repository: Repository = RepositoryImpl()) : ViewModel() {
 
     private val liveDataToObserve: MutableLiveData<AppState> = MutableLiveData()
 
-    fun getData(): LiveData<AppState>{
+    fun getData(): LiveData<AppState> {
         return liveDataToObserve
     }
 
-    fun getFilmFromLocal() {
-        liveDataToObserve.value = AppState.Loading
-        Thread{
-            sleep(1000)
-            liveDataToObserve.postValue(AppState.Success(repository.getFilmFromLocal()))
-        }.start()
-    }
+    fun getFilmFromLocalFantasy() = getDataFromLocalSource(isFantasy = true)
 
-    fun getFilmFromRemote() {
+    fun getFilmFromLocalMarvel() = getDataFromLocalSource(isFantasy = false)
+
+    fun getDataFromLocalSource(isFantasy: Boolean) {
         liveDataToObserve.value = AppState.Loading
-        Thread{
-            sleep(3000)
-            liveDataToObserve.postValue(AppState.Success(repository.getFilmFromServer()))
+        Thread {
+            sleep(1000)
+            liveDataToObserve.postValue(
+                AppState.Success(
+                    if (isFantasy) {
+                        repository.getFilmFromLocalFantasy()
+                    } else {
+                        repository.getFilmFromLocalMarvel()
+                    }
+                )
+            )
         }.start()
     }
 

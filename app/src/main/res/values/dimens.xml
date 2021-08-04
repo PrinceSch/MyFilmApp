@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="padding">8sp</dimen>
+    <dimen name="item_film_title_maxWidth">250sp</dimen>
+    <dimen name="item_film_title_size">25sp</dimen>
+    <dimen name="item_poster_size">110sp</dimen>
+    <dimen name="item_genres_size">16sp</dimen>
+    <dimen name="item_origtitle_size">18sp</dimen>
+</resources>
