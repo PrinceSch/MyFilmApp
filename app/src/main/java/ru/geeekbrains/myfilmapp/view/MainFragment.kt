@@ -58,19 +58,15 @@ class MainFragment : Fragment() {
             changeFilmDataSet()
         }
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        val observer = Observer<AppState> { a -> renderData(a) }
+        val observer = Observer<AppState> { appStateData -> renderData(appStateData) }
 
         viewModel.getData().observe(viewLifecycleOwner, observer)
-        viewModel.getFilmFromLocalMarvel()
+        loadDataSet()
     }
 
     private fun changeFilmDataSet() {
-        if (isDataSetFantasy) {
-            viewModel.getFilmFromLocalFantasy()
-        } else {
-            viewModel.getFilmFromLocalMarvel()
-        }
         isDataSetFantasy = !isDataSetFantasy
+        loadDataSet()
     }
 
     private fun renderData(data: AppState) {
@@ -108,5 +104,13 @@ class MainFragment : Fragment() {
 
     interface OnItemViewClickListener {
         fun onItemViewClick(film: Film)
+    }
+
+    fun loadDataSet(){
+        if (isDataSetFantasy) {
+            viewModel.getFilmFromLocalFantasy()
+        } else {
+            viewModel.getFilmFromLocalMarvel()
+        }
     }
 }

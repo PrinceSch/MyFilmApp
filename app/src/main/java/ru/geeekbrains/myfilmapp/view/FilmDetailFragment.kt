@@ -26,17 +26,15 @@ class FilmDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val film = arguments?.getParcelable<Film>(BUNDLE_EXTRA)
-        if (film != null){
-            populateData(film)
-        }
+        film?.let { populateData(film) }
     }
 
-    fun populateData(filmData: Film){
-        with(binding){
+    fun populateData(filmData: Film) {
+        with(binding) {
             detailFilmTitle.text = filmData.title
             detailFilmGenres.text = filmData.genres[0].name + ", " + filmData.genres[1].name
             detailFilmOrigtitle.text = filmData.original_title
-            Picasso.with(context)
+            Picasso.get()
                 .load(filmData.poster_path)
                 .into(detailFilmPoster)
         }
@@ -45,7 +43,7 @@ class FilmDetailFragment : Fragment() {
     companion object {
         const val BUNDLE_EXTRA = "film"
 
-        fun newInstance(bundle: Bundle): FilmDetailFragment{
+        fun newInstance(bundle: Bundle): FilmDetailFragment {
             val fragment = FilmDetailFragment()
             fragment.arguments = bundle
             return fragment

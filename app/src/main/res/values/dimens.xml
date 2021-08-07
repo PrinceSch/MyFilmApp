@@ -6,4 +6,5 @@
     <dimen name="item_poster_size">110sp</dimen>
     <dimen name="item_genres_size">16sp</dimen>
     <dimen name="item_origtitle_size">18sp</dimen>
+    <dimen name="item_poster">100dp</dimen>
 </resources>

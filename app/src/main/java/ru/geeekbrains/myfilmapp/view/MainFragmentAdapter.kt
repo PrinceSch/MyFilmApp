@@ -43,6 +43,11 @@ class MainFragmentAdapter : RecyclerView.Adapter<MainFragmentAdapter.MainViewHol
         RecyclerView.ViewHolder(binding.root){
             fun bind(film: Film){
                 binding.itemFilmTitle.text = film.title
+                Picasso.get()
+                    .load(film.poster_path)
+                    .fit()
+                    .centerCrop()
+                    .into(binding.itemPoster)
                 binding.root.setOnClickListener {
                     onItemViewClickListener?.onItemViewClick(film)
                 }

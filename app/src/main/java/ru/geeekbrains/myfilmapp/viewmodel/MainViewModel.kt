@@ -9,6 +9,7 @@ import ru.geeekbrains.myfilmapp.model.repository.RepositoryImpl
 import java.lang.Thread.*
 
 class MainViewModel(private val repository: Repository = RepositoryImpl()) : ViewModel() {
+    private val myLoadingTime : Long = 1000
 
     private val liveDataToObserve: MutableLiveData<AppState> = MutableLiveData()
 
@@ -23,7 +24,7 @@ class MainViewModel(private val repository: Repository = RepositoryImpl()) : Vie
     fun getDataFromLocalSource(isFantasy: Boolean) {
         liveDataToObserve.value = AppState.Loading
         Thread {
-            sleep(1000)
+            sleep(myLoadingTime)
             liveDataToObserve.postValue(
                 AppState.Success(
                     if (isFantasy) {
