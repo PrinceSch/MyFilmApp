@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import ru.geeekbrains.myfilmapp.databinding.FragmentFilmDetailBinding
 import ru.geeekbrains.myfilmapp.model.data.Film
+import ru.geeekbrains.myfilmapp.model.data.Genre
 
 
 class FilmDetailFragment : Fragment() {
@@ -18,25 +19,26 @@ class FilmDetailFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFilmDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val film = arguments?.getParcelable<Film>(BUNDLE_EXTRA)
-        film?.let { populateData(film) }
+        arguments?.getParcelable<Film>(BUNDLE_EXTRA)?.let { populateData(it) }
     }
 
-    fun populateData(filmData: Film) {
+    private fun populateData(filmData: Film) {
         with(binding) {
-            detailFilmTitle.text = filmData.title
-            detailFilmGenres.text = filmData.genres[0].name + ", " + filmData.genres[1].name
-            detailFilmOrigtitle.text = filmData.original_title
-            Picasso.get()
-                .load(filmData.poster_path)
-                .into(detailFilmPoster)
+            filmData.also {
+                detailFilmTitle.text = it.title
+                detailFilmGenres.text = genresToString(it.genres)
+                detailFilmOrigtitle.text = it.original_title
+                Picasso.get()
+                    .load(it.poster_path)
+                    .into(detailFilmPoster)
+            }
         }
     }
 
@@ -48,6 +50,14 @@ class FilmDetailFragment : Fragment() {
             fragment.arguments = bundle
             return fragment
         }
+    }
+
+    private fun genresToString(genreList: List<Genre>) : String{
+        var genres = ""
+        for (genre in genreList){
+            genres += "${genre.name}, "
+        }
+        return genres
     }
 
 }

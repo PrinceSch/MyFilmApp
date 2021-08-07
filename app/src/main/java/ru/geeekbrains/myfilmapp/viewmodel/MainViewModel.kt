@@ -21,7 +21,7 @@ class MainViewModel(private val repository: Repository = RepositoryImpl()) : Vie
 
     fun getFilmFromLocalMarvel() = getDataFromLocalSource(isFantasy = false)
 
-    fun getDataFromLocalSource(isFantasy: Boolean) {
+    private fun getDataFromLocalSource(isFantasy: Boolean) {
         liveDataToObserve.value = AppState.Loading
         Thread {
             sleep(myLoadingTime)
