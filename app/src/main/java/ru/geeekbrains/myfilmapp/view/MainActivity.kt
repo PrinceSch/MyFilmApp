@@ -2,7 +2,6 @@ package ru.geeekbrains.myfilmapp.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import ru.geeekbrains.myfilmapp.R
 import ru.geeekbrains.myfilmapp.databinding.MainActivityBinding
 
 class MainActivity : AppCompatActivity() {
