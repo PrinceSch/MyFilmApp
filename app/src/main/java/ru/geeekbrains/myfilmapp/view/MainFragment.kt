@@ -72,25 +72,21 @@ class MainFragment : Fragment() {
         when (data) {
             is AppState.Success -> {
                 val filmData = data.filmData
-                binding.loadingLayout.visibility = View.GONE
+                binding.loadingLayout.hide()
                 adapter.setFilm(filmData)
             }
 
             is AppState.Loading -> {
-                binding.loadingLayout.visibility = View.VISIBLE
+                binding.loadingLayout.show()
             }
 
             is AppState.Error -> {
-                binding.loadingLayout.visibility = View.GONE
-                Snackbar.make(binding.main, "Error", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("Reload") {
-                        if (isDataSetFantasy) {
-                            viewModel.getFilmFromLocalFantasy()
-                        } else {
-                            viewModel.getFilmFromLocalMarvel()
-                        }
-                    }
-                    .show()
+                with(binding) {
+                    loadingLayout.hide()
+                    switchFilmData.showSnakeBar("Reload")
+
+                }
+
             }
         }
     }

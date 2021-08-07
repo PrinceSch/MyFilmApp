@@ -9,13 +9,11 @@ import ru.geeekbrains.myfilmapp.model.repository.RepositoryImpl
 import java.lang.Thread.*
 
 class MainViewModel(private val repository: Repository = RepositoryImpl()) : ViewModel() {
-    private val myLoadingTime : Long = 1000
+    private val myLoadingTime: Long = 1000
 
     private val liveDataToObserve: MutableLiveData<AppState> = MutableLiveData()
 
-    fun getData(): LiveData<AppState> {
-        return liveDataToObserve
-    }
+    fun getData(): LiveData<AppState> = liveDataToObserve
 
     fun getFilmFromLocalFantasy() = getDataFromLocalSource(isFantasy = true)
 
