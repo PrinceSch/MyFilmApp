@@ -1,6 +1,5 @@
 package ru.geeekbrains.myfilmapp.view
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -11,19 +10,15 @@ import ru.geeekbrains.myfilmapp.model.data.Film
 class MainFragmentAdapter : RecyclerView.Adapter<MainFragmentAdapter.MainViewHolder>() {
 
     private var filmData: List<Film> = listOf()
-    private var onItemViewClickListener: MainFragment.OnItemViewClickListener? = null
+    private var onItemViewClickListener: (Film) -> Unit = {}
 
     fun setFilm (data: List<Film>){
         filmData = data
         notifyDataSetChanged()
     }
 
-    fun setOnItemViewClickListener(onItemViewClickListener: MainFragment.OnItemViewClickListener){
+    fun setOnItemViewClickListener(onItemViewClickListener: (Film) -> Unit){
         this.onItemViewClickListener = onItemViewClickListener
-    }
-
-    fun removeOnItemViewClickListener(){
-        onItemViewClickListener = null
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
@@ -42,9 +37,16 @@ class MainFragmentAdapter : RecyclerView.Adapter<MainFragmentAdapter.MainViewHol
     inner class MainViewHolder(val binding: RecyclerFilmItemBinding ) :
         RecyclerView.ViewHolder(binding.root){
             fun bind(film: Film){
-                binding.itemFilmTitle.text = film.title
-                binding.root.setOnClickListener {
-                    onItemViewClickListener?.onItemViewClick(film)
+                with(binding){
+                    itemFilmTitle.text = film.title
+                    Picasso.get()
+                        .load(film.poster_path)
+                        .fit()
+                        .centerCrop()
+                        .into(itemPoster)
+                    root.setOnClickListener {
+                        onItemViewClickListener(film)
+                    }
                 }
             }
         }

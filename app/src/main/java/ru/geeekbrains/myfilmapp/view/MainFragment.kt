@@ -1,6 +1,5 @@
 package ru.geeekbrains.myfilmapp.view
 
-import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -13,7 +12,6 @@ import com.google.android.material.snackbar.Snackbar
 import ru.geeekbrains.myfilmapp.R
 import ru.geeekbrains.myfilmapp.databinding.MainFragmentBinding
 import ru.geeekbrains.myfilmapp.model.AppState
-import ru.geeekbrains.myfilmapp.model.data.Film
 import ru.geeekbrains.myfilmapp.viewmodel.MainViewModel
 
 class MainFragment : Fragment() {
@@ -22,7 +20,9 @@ class MainFragment : Fragment() {
         fun newInstance() = MainFragment()
     }
 
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProvider(this).get(MainViewModel::class.java)
+    }
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
     private val adapter = MainFragmentAdapter()
@@ -37,65 +37,56 @@ class MainFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        adapter.setOnItemViewClickListener(object: OnItemViewClickListener{
-            override fun onItemViewClick(film: Film) {
-                val manager = activity?.supportFragmentManager
-                if (manager != null){
-                    val bundle = Bundle()
-                    bundle.putParcelable(FilmDetailFragment.BUNDLE_EXTRA, film)
-                    manager.beginTransaction()
-                        .replace(R.id.container, FilmDetailFragment.newInstance(bundle))
+        adapter.setOnItemViewClickListener { film ->
+                activity?.supportFragmentManager?.apply {
+                    this.beginTransaction()
+                        .replace(R.id.container, FilmDetailFragment.newInstance(Bundle().apply {
+                            putParcelable(FilmDetailFragment.BUNDLE_EXTRA, film)
+                        }))
                         .addToBackStack("")
                         .commitAllowingStateLoss()
                 }
             }
-        })
 
         super.onViewCreated(view, savedInstanceState)
-        binding.mainFragmentRecyclerView.adapter = adapter
-        binding.mainFragmentRecyclerView.layoutManager = GridLayoutManager(context,3)
-        binding.switchFilmData.setOnClickListener{
-            changeFilmDataSet()
-        }
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        val observer = Observer<AppState> { a -> renderData(a) }
 
+        with(binding) {
+            mainFragmentRecyclerView.adapter = adapter
+            mainFragmentRecyclerView.layoutManager = GridLayoutManager(context, 3)
+            switchFilmData.setOnClickListener {
+                changeFilmDataSet()
+            }
+        }
+
+        val observer = Observer<AppState> { appStateData -> renderData(appStateData) }
         viewModel.getData().observe(viewLifecycleOwner, observer)
-        viewModel.getFilmFromLocalMarvel()
+        loadDataSet()
     }
 
     private fun changeFilmDataSet() {
-        if (isDataSetFantasy) {
-            viewModel.getFilmFromLocalFantasy()
-        } else {
-            viewModel.getFilmFromLocalMarvel()
-        }
         isDataSetFantasy = !isDataSetFantasy
+        loadDataSet()
     }
 
     private fun renderData(data: AppState) {
         when (data) {
             is AppState.Success -> {
                 val filmData = data.filmData
-                binding.loadingLayout.visibility = View.GONE
+                binding.loadingLayout.hide()
                 adapter.setFilm(filmData)
             }
 
             is AppState.Loading -> {
-                binding.loadingLayout.visibility = View.VISIBLE
+                binding.loadingLayout.show()
             }
 
             is AppState.Error -> {
-                binding.loadingLayout.visibility = View.GONE
-                Snackbar.make(binding.main, "Error", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("Reload") {
-                        if (isDataSetFantasy) {
-                            viewModel.getFilmFromLocalFantasy()
-                        } else {
-                            viewModel.getFilmFromLocalMarvel()
-                        }
-                    }
-                    .show()
+                with(binding) {
+                    loadingLayout.hide()
+                    switchFilmData.showSnakeBar("Reload")
+
+                }
+
             }
         }
     }
@@ -103,10 +94,13 @@ class MainFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        adapter.removeOnItemViewClickListener()
     }
 
-    interface OnItemViewClickListener {
-        fun onItemViewClick(film: Film)
+    private fun loadDataSet() {
+        if (isDataSetFantasy) {
+            viewModel.getFilmFromLocalFantasy()
+        } else {
+            viewModel.getFilmFromLocalMarvel()
+        }
     }
 }
