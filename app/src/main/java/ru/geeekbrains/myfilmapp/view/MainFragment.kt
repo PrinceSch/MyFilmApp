@@ -18,6 +18,7 @@ class MainFragment : Fragment() {
 
     companion object {
         fun newInstance() = MainFragment()
+        const val SPAN_LAYOUT = 3
     }
 
     private val viewModel: MainViewModel by lazy {
@@ -52,7 +53,7 @@ class MainFragment : Fragment() {
 
         with(binding) {
             mainFragmentRecyclerView.adapter = adapter
-            mainFragmentRecyclerView.layoutManager = GridLayoutManager(context, 3)
+            mainFragmentRecyclerView.layoutManager = GridLayoutManager(context, SPAN_LAYOUT)
             switchFilmData.setOnClickListener {
                 changeFilmDataSet()
             }
