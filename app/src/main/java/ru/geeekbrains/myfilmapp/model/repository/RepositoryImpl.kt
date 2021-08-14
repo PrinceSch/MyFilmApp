@@ -11,7 +11,10 @@ class RepositoryImpl : Repository {
         listOf(Genre(12, "приключения"), Genre(14, "фэнтези")),
         671,
         "Harry Potter and the Philosopher's Stone",
-        "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/8i7H09Bj25V6ZxaKWybvUYZmyT6.jpg"
+        "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/8i7H09Bj25V6ZxaKWybvUYZmyT6.jpg",
+        "2001",
+        "status",
+        null
     )
 
 override fun getFilmFromLocalFantasy() = getFantasyFilms()
