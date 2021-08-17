@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.squareup.picasso.Picasso
 import ru.geeekbrains.myfilmapp.BuildConfig
 import ru.geeekbrains.myfilmapp.R
 import ru.geeekbrains.myfilmapp.databinding.FragmentFilmDetailBinding
@@ -77,6 +78,10 @@ class FilmDetailFragment : Fragment() {
                 detailFilmTitle.text = title
                 detailFilmGenres.text = genres.toString()
                 detailFilmOrigtitle.text = original_title
+                Picasso
+                    .get()
+                    .load(poster_path)
+                    .into(detailFilmPoster)
             }
         }
     }
