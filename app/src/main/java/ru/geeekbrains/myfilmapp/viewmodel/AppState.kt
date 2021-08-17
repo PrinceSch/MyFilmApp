@@ -1,4 +1,4 @@
-package ru.geeekbrains.myfilmapp.model
+package ru.geeekbrains.myfilmapp.viewmodel
 
 import ru.geeekbrains.myfilmapp.model.data.Film
 

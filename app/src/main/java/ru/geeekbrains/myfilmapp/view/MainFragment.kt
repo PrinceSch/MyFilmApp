@@ -8,10 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import ru.geeekbrains.myfilmapp.R
 import ru.geeekbrains.myfilmapp.databinding.MainFragmentBinding
-import ru.geeekbrains.myfilmapp.model.AppState
+import ru.geeekbrains.myfilmapp.viewmodel.AppState
 import ru.geeekbrains.myfilmapp.viewmodel.MainViewModel
 
 class MainFragment : Fragment() {
