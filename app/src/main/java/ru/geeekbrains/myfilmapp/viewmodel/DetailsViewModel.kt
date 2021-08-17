@@ -2,8 +2,7 @@ package ru.geeekbrains.myfilmapp.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.gson.Gson
-import okhttp3.*
+import retrofit2.*
 import ru.geeekbrains.myfilmapp.model.data.Film
 import ru.geeekbrains.myfilmapp.model.dto.MovieResponseDTO
 import ru.geeekbrains.myfilmapp.model.repository.DetailsRepository
@@ -16,19 +15,22 @@ private const val REQUEST_ERROR = "Ошибка запроса на сервер
 private const val CORRUPTED_DATA = "Неполные данные"
 
 class DetailsViewModel(
-    private val detailsLiveData: MutableLiveData<AppState> = MutableLiveData(),
-    private val detailsRepositoryImpl: DetailsRepository = DetailsRepositoryImpl(RemoteDataSource())) : ViewModel(){
+    val detailsLiveData: MutableLiveData<AppState> = MutableLiveData(),
+    private val detailsRepositoryImpl: DetailsRepository = DetailsRepositoryImpl(RemoteDataSource())) : ViewModel() {
 
     fun getLiveData() = detailsLiveData
-    fun getFilmFromRemoteSource(requestLink : String) {
+    fun getFilmFromRemoteSource(id: Int, key: String) {
         detailsLiveData.value = AppState.Loading
-        detailsRepositoryImpl.getFilmDetailsFromServer(requestLink, callBack)
+        detailsRepositoryImpl.getFilmDetailsFromServer(id, key, callBack)
     }
 
-    private val callBack = object : Callback {
+    private val callBack = object : Callback<MovieResponseDTO> {
         @Throws(IOException::class)
-        override fun onResponse(call: Call?, response: Response) {
-            val serverResponse: String? = response.body()?.string()
+        override fun onResponse(
+            call: Call<MovieResponseDTO>,
+            response: Response<MovieResponseDTO>
+        ) {
+            val serverResponse: MovieResponseDTO? = response.body()
             detailsLiveData.postValue(
                 if (response.isSuccessful && serverResponse != null) {
                     checkResponse(serverResponse)
@@ -38,22 +40,31 @@ class DetailsViewModel(
             )
         }
 
-        override fun onFailure(call: Call?, e: IOException?) {
-            detailsLiveData.postValue(AppState.Error(Throwable(e?.message ?: REQUEST_ERROR)))
+        override fun onFailure(call: Call<MovieResponseDTO>, t: Throwable) {
+            detailsLiveData.postValue(AppState.Error(Throwable(t.message ?: REQUEST_ERROR)))
         }
-    }
 
-    private fun checkResponse(serverResponse: String): AppState {
-        val movieResponseDTO: MovieResponseDTO = Gson().fromJson(serverResponse, MovieResponseDTO::class.java)
-        return if (movieResponseDTO.id == 0) {
-            AppState.Error(Throwable(CORRUPTED_DATA))
-        } else {
-            AppState.Success(convertDtoToModel(movieResponseDTO))
+        private fun checkResponse(serverResponse: MovieResponseDTO): AppState {
+            return if (serverResponse.id == 0) {
+                AppState.Error(Throwable(CORRUPTED_DATA))
+            } else {
+                AppState.Success(convertDtoToModel(serverResponse))
+            }
         }
-    }
-    private fun convertDtoToModel(movieResponseDTO: MovieResponseDTO): List<Film> {
-        return listOf(Film(movieResponseDTO.title, movieResponseDTO.genreIds, movieResponseDTO.id,
-        movieResponseDTO.original_title, movieResponseDTO.poster_path, movieResponseDTO.release_date,
-        movieResponseDTO.status, movieResponseDTO.tagline))
+
+        private fun convertDtoToModel(movieResponseDTO: MovieResponseDTO): List<Film> {
+            return listOf(
+                Film(
+                    movieResponseDTO.title,
+                    movieResponseDTO.genreIds,
+                    movieResponseDTO.id,
+                    movieResponseDTO.original_title,
+                    movieResponseDTO.poster_path,
+                    movieResponseDTO.release_date,
+                    movieResponseDTO.status,
+                    movieResponseDTO.tagline
+                )
+            )
+        }
     }
 }

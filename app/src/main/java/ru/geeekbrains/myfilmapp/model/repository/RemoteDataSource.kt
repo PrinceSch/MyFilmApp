@@ -1,18 +1,24 @@
 package ru.geeekbrains.myfilmapp.model.repository
 
-import okhttp3.Callback
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import com.google.gson.GsonBuilder
+import retrofit2.Callback
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import ru.geeekbrains.myfilmapp.BuildConfig
+import ru.geeekbrains.myfilmapp.model.dto.MovieResponseDTO
 
 private const val REQUEST_API_KEY = "FILM_API_KEY"
 
 class RemoteDataSource {
-    fun getFilmDetails(requestLink: String, callback: Callback) {
-        val builder: Request.Builder = Request.Builder().apply {
-            header(REQUEST_API_KEY, BuildConfig.FILM_API_KEY)
-            url(requestLink)
-        }
-        OkHttpClient().newCall(builder.build()).enqueue(callback)
+
+    private val filmAPI = Retrofit.Builder()
+        .baseUrl("https://api.themoviedb.org/")
+        .addConverterFactory(
+            GsonConverterFactory.create(GsonBuilder().setLenient().create())
+        )
+        .build().create(FilmAPI::class.java)
+
+    fun getFilmDetails(id: Int, key: String, callback: Callback<MovieResponseDTO>){
+        filmAPI.getFilm(BuildConfig.FILM_API_KEY, id, key).enqueue(callback)
     }
 }

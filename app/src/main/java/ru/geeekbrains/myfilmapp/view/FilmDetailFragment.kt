@@ -40,8 +40,8 @@ class FilmDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         filmBundle = arguments?.getParcelable(BUNDLE_EXTRA) ?: Film()
-        viewModel.getLiveData().observe(viewLifecycleOwner, Observer { renderData(it) })
-        viewModel.getFilmFromRemoteSource(MAIN_LINK + "${filmBundle.id}?api_key=${BuildConfig.FILM_API_KEY}1&language=ru")
+        viewModel.detailsLiveData.observe(viewLifecycleOwner, Observer { renderData(it) })
+        viewModel.getFilmFromRemoteSource(filmBundle.id, BuildConfig.FILM_API_KEY)
     }
 
     private fun renderData(appState: AppState) {
@@ -66,7 +66,7 @@ class FilmDetailFragment : Fragment() {
                     mainDetailFragmentView.showSnakeBar(getString(R.string.error))
                     mainDetailFragmentView.showSnakeBar(getString(R.string.reload))
                 }
-                viewModel.getFilmFromRemoteSource(MAIN_LINK + "${filmBundle.id}?api_key=${BuildConfig.FILM_API_KEY}1&language=ru-RU")
+                viewModel.getFilmFromRemoteSource(filmBundle.id, BuildConfig.FILM_API_KEY)
             }
         }
     }

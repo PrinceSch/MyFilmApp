@@ -1,7 +1,8 @@
 package ru.geeekbrains.myfilmapp.model.repository
 
-import okhttp3.Callback
+import retrofit2.Callback
+import ru.geeekbrains.myfilmapp.model.dto.MovieResponseDTO
 
 interface DetailsRepository {
-    fun getFilmDetailsFromServer(requestLink: String, callback: Callback)
+    fun getFilmDetailsFromServer(id: Int, key: String, callback: Callback<MovieResponseDTO>)
 }
