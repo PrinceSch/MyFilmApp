@@ -1,56 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/film_detail_background"
-    android:padding="@dimen/padding"
-    tools:context=".view.FilmDetailFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/detail_film_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxWidth="@dimen/item_film_title_maxWidth"
-        android:textColor="@color/black"
-        android:textSize="@dimen/item_film_title_size"
-        android:gravity="end"
-        app:layout_constraintEnd_toStartOf="@id/detail_film_poster"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/detail_film_poster"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:width="@dimen/item_poster_size"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/detail_film_title"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/detail_film_genres"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="end"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_detail_fragment_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/film_detail_background"
         android:padding="@dimen/padding"
-        android:textColor="@color/teal_700"
-        android:textSize="@dimen/item_genres_size"
-        app:layout_constraintBottom_toTopOf="@id/detail_film_origtitle"
-        app:layout_constraintEnd_toStartOf="@id/detail_film_poster"
-        app:layout_constraintTop_toBottomOf="@id/detail_film_title" />
+        tools:context=".view.FilmDetailFragment">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/detail_film_origtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/padding"
-        android:paddingEnd="@dimen/padding"
-        android:textColor="@color/purple_700"
-        android:textSize="@dimen/item_origtitle_size"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detail_film_poster" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/detail_film_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="@dimen/item_film_title_maxWidth"
+            android:textColor="@color/black"
+            android:textSize="@dimen/item_film_title_size"
+            android:gravity="end"
+            app:layout_constraintEnd_toStartOf="@id/detail_film_poster"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/detail_film_poster"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="@dimen/item_poster_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/detail_film_title"
+            app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/detail_film_genres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:padding="@dimen/padding"
+            android:textColor="@color/teal_700"
+            android:textSize="@dimen/item_genres_size"
+            app:layout_constraintBottom_toTopOf="@id/detail_film_origtitle"
+            app:layout_constraintEnd_toStartOf="@id/detail_film_poster"
+            app:layout_constraintTop_toBottomOf="@id/detail_film_title" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/detail_film_origtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/padding"
+            android:paddingEnd="@dimen/padding"
+            android:textColor="@color/purple_700"
+            android:textSize="@dimen/item_origtitle_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/detail_film_poster" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/detail_fragment_loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/loadingBackground"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+</FrameLayout>

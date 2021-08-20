@@ -3,7 +3,6 @@ package ru.geeekbrains.myfilmapp.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.geeekbrains.myfilmapp.model.AppState
 import ru.geeekbrains.myfilmapp.model.repository.Repository
 import ru.geeekbrains.myfilmapp.model.repository.RepositoryImpl
 import java.lang.Thread.*
