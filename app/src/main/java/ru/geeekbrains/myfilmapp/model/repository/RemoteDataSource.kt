@@ -7,12 +7,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.geeekbrains.myfilmapp.BuildConfig
 import ru.geeekbrains.myfilmapp.model.dto.MovieResponseDTO
 
-private const val REQUEST_API_KEY = "FILM_API_KEY"
-
 class RemoteDataSource {
 
     private val filmAPI = Retrofit.Builder()
-        .baseUrl("https://api.themoviedb.org/")
+        .baseUrl("https://api.themoviedb.org")
         .addConverterFactory(
             GsonConverterFactory.create(GsonBuilder().setLenient().create())
         )

@@ -59,7 +59,7 @@ class DetailsViewModel(
                     movieResponseDTO.genreIds,
                     movieResponseDTO.id,
                     movieResponseDTO.original_title,
-                    movieResponseDTO.poster_path,
+                    "https://image.tmdb.org/t/p/original"+movieResponseDTO.poster_path,
                     movieResponseDTO.release_date,
                     movieResponseDTO.status,
                     movieResponseDTO.tagline
