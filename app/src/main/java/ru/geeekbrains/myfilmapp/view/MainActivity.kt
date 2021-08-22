@@ -1,26 +1,26 @@
 package ru.geeekbrains.myfilmapp.view
 
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
+import android.view.Menu
+import android.view.MenuItem
+import ru.geeekbrains.myfilmapp.R
 import ru.geeekbrains.myfilmapp.databinding.MainActivityBinding
+
+private const val IS_ADULT_KEY = "ADULT_CONTENT_KEY"
 
 class MainActivity : AppCompatActivity() {
 
+    private var id: Int = 0
+    private var isAdultEnabled = false
     private lateinit var binding: MainActivityBinding
-    private val receiver = MainBroadcastReceiver()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        registerReceiver(receiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -28,18 +28,21 @@ class MainActivity : AppCompatActivity() {
                 .commitNow()
         }
     }
-}
 
-class MainBroadcastReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent?) {
-        intent?.let {
-            StringBuilder().apply {
-                append("СООБЩЕНИЕ ОТ СИСТЕМЫ\n")
-                append("Action: ${intent.action}")
-                toString().also {
-                    Toast.makeText(context, it, Toast.LENGTH_LONG).show()
-                }
-            }
-        }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.adult_menu, menu)
+        return super.onCreateOptionsMenu(menu)
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        id = item.itemId
+        if (id == R.id.adult_menu_item){
+            val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
+            val editor = sharedPref.edit()
+            editor.putBoolean(IS_ADULT_KEY, !isAdultEnabled)
+            editor.apply()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 }
