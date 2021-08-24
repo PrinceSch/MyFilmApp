@@ -1,19 +1,15 @@
 package ru.geeekbrains.myfilmapp.view
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import ru.geeekbrains.myfilmapp.R
 import ru.geeekbrains.myfilmapp.databinding.MainActivityBinding
 
-private const val IS_ADULT_KEY = "ADULT_CONTENT_KEY"
 
 class MainActivity : AppCompatActivity() {
-
-    private var id: Int = 0
-    private var isAdultEnabled = false
     private lateinit var binding: MainActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,19 +26,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.adult_menu, menu)
+        menuInflater.inflate(R.menu.main_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        id = item.itemId
-        if (id == R.id.adult_menu_item){
-            val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
-            val editor = sharedPref.edit()
-            editor.putBoolean(IS_ADULT_KEY, !isAdultEnabled)
-            editor.apply()
+        when(item.itemId){
+            R.id.menu_history -> {
+                supportFragmentManager.apply {
+                    beginTransaction()
+                        .replace(R.id.container, HistoryFragment.newInstance())
+                        .addToBackStack("")
+                        .commitAllowingStateLoss()
+                }
+                true
+                }
+            R.id.menu_lists -> {
+                Toast.makeText(this, getString(R.string.lists), Toast.LENGTH_LONG).show()}
+            R.id.menu_search -> {
+                Toast.makeText(this, getString(R.string.search), Toast.LENGTH_LONG).show()}
         }
         return super.onOptionsItemSelected(item)
     }
+
+
 
 }

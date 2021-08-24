@@ -49,20 +49,20 @@ class FilmDetailFragment : Fragment() {
             is AppState.Success -> {
                 with(binding) {
                     mainDetailFragmentView.visibility = View.VISIBLE
-                    detailFragmentLoadingLayout.visibility = View.GONE
+                    includedLoadingLayout.loadingLayout.visibility = View.GONE
                     setFilm(appState.filmData)
                 }
             }
             is AppState.Loading -> {
                 with(binding) {
                     mainDetailFragmentView.visibility = View.GONE
-                    detailFragmentLoadingLayout.visibility = View.VISIBLE
+                    includedLoadingLayout.loadingLayout.visibility = View.VISIBLE
                 }
             }
             is AppState.Error -> {
                 with(binding) {
                     mainDetailFragmentView.visibility = View.VISIBLE
-                    detailFragmentLoadingLayout.visibility = View.GONE
+                    includedLoadingLayout.loadingLayout.visibility = View.GONE
                     mainDetailFragmentView.showSnakeBar(getString(R.string.error))
                     mainDetailFragmentView.showSnakeBar(getString(R.string.reload))
                 }
@@ -73,6 +73,7 @@ class FilmDetailFragment : Fragment() {
 
     private fun setFilm(filmData: List<Film>) {
         filmData[0].apply {
+            saveFilm(this)
             with(binding){
                 detailFilmTitle.text = title
                 genres?.let {detailFilmGenres.text = genresToString(genres)}
@@ -83,6 +84,10 @@ class FilmDetailFragment : Fragment() {
                     .into(detailFilmPoster)
             }
         }
+    }
+
+    private fun saveFilm (film: Film){
+        viewModel.saveFilmToDB(film)
     }
 
     companion object {

@@ -5,5 +5,6 @@
         android:id="@+id/adult_menu_item"
         android:title="@string/adult"
         app:actionLayout="@layout/switch_item"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        />
 </menu>
