@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when (item.itemId) {
             R.id.menu_history -> {
                 supportFragmentManager.apply {
                     beginTransaction()
@@ -40,15 +40,25 @@ class MainActivity : AppCompatActivity() {
                         .commitAllowingStateLoss()
                 }
                 true
-                }
+            }
             R.id.menu_lists -> {
-                Toast.makeText(this, getString(R.string.lists), Toast.LENGTH_LONG).show()}
+                Toast.makeText(this, getString(R.string.lists), Toast.LENGTH_LONG).show()
+            }
             R.id.menu_search -> {
-                Toast.makeText(this, getString(R.string.search), Toast.LENGTH_LONG).show()}
+                Toast.makeText(this, getString(R.string.search), Toast.LENGTH_LONG).show()
+            }
+            R.id.menu_content_provider -> {
+                supportFragmentManager.apply {
+                    beginTransaction()
+                        .replace(R.id.container, ContentProviderFragment.newInstance())
+                        .addToBackStack("")
+                        .commitAllowingStateLoss()
+                }
+                true
+            }
         }
         return super.onOptionsItemSelected(item)
     }
-
 
 
 }
