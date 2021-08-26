@@ -2,16 +2,21 @@ package ru.geeekbrains.myfilmapp.view
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
+import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import ru.geeekbrains.myfilmapp.R
 import ru.geeekbrains.myfilmapp.databinding.MainFragmentBinding
 import ru.geeekbrains.myfilmapp.viewmodel.AppState
 import ru.geeekbrains.myfilmapp.viewmodel.MainViewModel
+
+//2. Добавьте возможность оставлять заметку о просмотренном фильме, чтобы сохранять её в базе данных.
+//3. Создайте БД для вашего приложения и храните там историю запросов: сведения о фильмах, время просмотра, заметку о фильме.
+//4. Выполняйте запросы в БД асинхронно (в рабочем потоке).
+
 
 class MainFragment : Fragment() {
 
@@ -63,6 +68,7 @@ class MainFragment : Fragment() {
         loadDataSet()
     }
 
+
     private fun changeFilmDataSet() {
         isDataSetFantasy = !isDataSetFantasy
         loadDataSet()
@@ -72,17 +78,17 @@ class MainFragment : Fragment() {
         when (data) {
             is AppState.Success -> {
                 val filmData = data.filmData
-                binding.loadingLayout.hide()
+                binding.includedLoadingLayout.loadingLayout.hide()
                 adapter.setFilm(filmData)
             }
 
             is AppState.Loading -> {
-                binding.loadingLayout.show()
+                binding.includedLoadingLayout.loadingLayout.show()
             }
 
             is AppState.Error -> {
                 with(binding) {
-                    loadingLayout.hide()
+                    includedLoadingLayout.loadingLayout.hide()
                     switchFilmData.showSnakeBar("Reload")
 
                 }

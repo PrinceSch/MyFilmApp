@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
 import ru.geeekbrains.myfilmapp.BuildConfig
@@ -15,9 +14,9 @@ import ru.geeekbrains.myfilmapp.R
 import ru.geeekbrains.myfilmapp.databinding.FragmentFilmDetailBinding
 import ru.geeekbrains.myfilmapp.viewmodel.AppState
 import ru.geeekbrains.myfilmapp.model.data.Film
+import ru.geeekbrains.myfilmapp.model.data.Genre
 import ru.geeekbrains.myfilmapp.viewmodel.DetailsViewModel
 
-private const val MAIN_LINK = "https://api.themoviedb.org/3/movie/"
 
 
 class FilmDetailFragment : Fragment() {
@@ -41,7 +40,7 @@ class FilmDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         filmBundle = arguments?.getParcelable(BUNDLE_EXTRA) ?: Film()
-        viewModel.detailsLiveData.observe(viewLifecycleOwner, Observer { renderData(it) })
+        viewModel.detailsLiveData.observe(viewLifecycleOwner, { renderData(it) })
         viewModel.getFilmFromRemoteSource(filmBundle.id, BuildConfig.FILM_API_KEY)
     }
 
@@ -50,20 +49,20 @@ class FilmDetailFragment : Fragment() {
             is AppState.Success -> {
                 with(binding) {
                     mainDetailFragmentView.visibility = View.VISIBLE
-                    detailFragmentLoadingLayout.visibility = View.GONE
+                    includedLoadingLayout.loadingLayout.visibility = View.GONE
                     setFilm(appState.filmData)
                 }
             }
             is AppState.Loading -> {
                 with(binding) {
                     mainDetailFragmentView.visibility = View.GONE
-                    detailFragmentLoadingLayout.visibility = View.VISIBLE
+                    includedLoadingLayout.loadingLayout.visibility = View.VISIBLE
                 }
             }
             is AppState.Error -> {
                 with(binding) {
                     mainDetailFragmentView.visibility = View.VISIBLE
-                    detailFragmentLoadingLayout.visibility = View.GONE
+                    includedLoadingLayout.loadingLayout.visibility = View.GONE
                     mainDetailFragmentView.showSnakeBar(getString(R.string.error))
                     mainDetailFragmentView.showSnakeBar(getString(R.string.reload))
                 }
@@ -74,9 +73,10 @@ class FilmDetailFragment : Fragment() {
 
     private fun setFilm(filmData: List<Film>) {
         filmData[0].apply {
+            saveFilm(this)
             with(binding){
                 detailFilmTitle.text = title
-                detailFilmGenres.text = genres.toString()
+                genres?.let {detailFilmGenres.text = genresToString(genres)}
                 detailFilmOrigtitle.text = original_title
                 Picasso
                     .get()
@@ -84,6 +84,10 @@ class FilmDetailFragment : Fragment() {
                     .into(detailFilmPoster)
             }
         }
+    }
+
+    private fun saveFilm (film: Film){
+        viewModel.saveFilmToDB(film)
     }
 
     companion object {
@@ -96,10 +100,10 @@ class FilmDetailFragment : Fragment() {
         }
     }
 
-    private fun genresToString(genreList: List<Int>): String {
+    private fun genresToString(genreList: List<Genre>): String {
         var genres = ""
         for (genre in genreList) {
-            genres += "${genre}, "
+            genres += "${genre.name}, "
         }
         return genres
     }

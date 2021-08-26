@@ -3,11 +3,10 @@ package ru.geeekbrains.myfilmapp.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import retrofit2.*
+import ru.geeekbrains.myfilmapp.app.App.Companion.getHistoryDao
 import ru.geeekbrains.myfilmapp.model.data.Film
 import ru.geeekbrains.myfilmapp.model.dto.MovieResponseDTO
-import ru.geeekbrains.myfilmapp.model.repository.DetailsRepository
-import ru.geeekbrains.myfilmapp.model.repository.DetailsRepositoryImpl
-import ru.geeekbrains.myfilmapp.model.repository.RemoteDataSource
+import ru.geeekbrains.myfilmapp.model.repository.*
 import java.io.IOException
 
 private const val SERVER_ERROR = "Ошибка сервера"
@@ -16,12 +15,17 @@ private const val CORRUPTED_DATA = "Неполные данные"
 
 class DetailsViewModel(
     val detailsLiveData: MutableLiveData<AppState> = MutableLiveData(),
-    private val detailsRepositoryImpl: DetailsRepository = DetailsRepositoryImpl(RemoteDataSource())) : ViewModel() {
+    private val detailsRepositoryImpl: DetailsRepository = DetailsRepositoryImpl(RemoteDataSource()),
+    private val historyRepository: LocalRepository = LocalRepositoryImpl(getHistoryDao())
+) : ViewModel() {
 
-    fun getLiveData() = detailsLiveData
     fun getFilmFromRemoteSource(id: Int, key: String) {
         detailsLiveData.value = AppState.Loading
         detailsRepositoryImpl.getFilmDetailsFromServer(id, key, callBack)
+    }
+
+    fun saveFilmToDB(film: Film){
+        historyRepository.saveEntity(film)
     }
 
     private val callBack = object : Callback<MovieResponseDTO> {
@@ -59,7 +63,7 @@ class DetailsViewModel(
                     movieResponseDTO.genreIds,
                     movieResponseDTO.id,
                     movieResponseDTO.original_title,
-                    movieResponseDTO.poster_path,
+                    "https://image.tmdb.org/t/p/original" + movieResponseDTO.poster_path,
                     movieResponseDTO.release_date,
                     movieResponseDTO.status,
                     movieResponseDTO.tagline
