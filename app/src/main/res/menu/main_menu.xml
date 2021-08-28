@@ -18,4 +18,11 @@
         android:title="@string/lists"
         android:icon="@drawable/ic_baseline_list_alt_24"
         app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/menu_content_provider"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:title="@string/content_provider"
+        app:showAsAction="never" />
+
 </menu>
